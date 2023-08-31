@@ -10,8 +10,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import javax.swing.JOptionPane;
-//import model.User;
-//import dao.Userdao;
 import javax.swing.ImageIcon;
 
 /**
@@ -19,6 +17,7 @@ import javax.swing.ImageIcon;
  * @author Susan
  */
 public class Login extends javax.swing.JFrame {
+
     Connection con = null;
 
     /**
@@ -28,18 +27,17 @@ public class Login extends javax.swing.JFrame {
         initComponents();
         btnlogin.setEnabled(false);
     }
-    
+
     //making sure that there is an input into the textbox before button is enabled
-    public void validateFields(){
+    public void validateFields() {
         String email = txtemail.getText();
         String password = txtpassword.getText();
-        if(!email.equals("") && !password.equals("")){
+        if (!email.equals("") && !password.equals("")) {
             btnlogin.setEnabled(true);
-        }
-        else{
+        } else {
             btnlogin.setEnabled(false);
         }
-        
+
     }
 
     /**
@@ -185,39 +183,38 @@ public class Login extends javax.swing.JFrame {
 
     private void btnloginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnloginActionPerformed
         // TODO add your handling code here:
-        
+
         //connecting to db
         try {
-        Class.forName("com.mysql.jdbc.Driver"); // Load the driver class
-        con = DriverManager.getConnection("jdbc:mysql://localhost:3306/cafedb","root","");
-        String name = txtemail.getText();
-        String password = txtpassword.getText();
-        
-        // Using PreparedStatement to prevent SQL injection
-        String sql = "SELECT * FROM user WHERE email=? AND password=?";
-        PreparedStatement pstmt = con.prepareStatement(sql);
-        pstmt.setString(1, name);
-        pstmt.setString(2, password);
-        
-        ResultSet rs = pstmt.executeQuery();
-        
-        if (rs.next()) {
-            JOptionPane.showMessageDialog(this,"Login Successful!");
-            new Home().setVisible(true);
-            
-            // You might want to proceed with the appropriate logic here
-        } else {
-            JOptionPane.showMessageDialog(this, "Username or password is incorrect");
-            txtemail.setText("");
-            txtpassword.setText("");
+            Class.forName("com.mysql.jdbc.Driver"); // Load the driver class
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/cafedb", "root", "");
+            String name = txtemail.getText();
+            String password = txtpassword.getText();
+
+            // Using PreparedStatement to prevent SQL injection
+            String sql = "SELECT * FROM user WHERE email=? AND password=?";
+            PreparedStatement pstmt = con.prepareStatement(sql);
+            pstmt.setString(1, name);
+            pstmt.setString(2, password);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                JOptionPane.showMessageDialog(this, "Login Successful!");
+                new Order(name).setVisible(true);
+                this.setVisible(false);
+            } else {
+                JOptionPane.showMessageDialog(this, "Username or password is incorrect");
+                txtemail.setText("");
+                txtpassword.setText("");
+            }
+
+            con.close();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, ex);
         }
-        
-        con.close();
-    } catch (Exception ex) {
-        JOptionPane.showMessageDialog(null, ex);
-    }
-        
-        
+
+
     }//GEN-LAST:event_btnloginActionPerformed
 
     private void txtemailKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtemailKeyReleased

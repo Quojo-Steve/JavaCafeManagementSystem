@@ -18,5 +18,5 @@ public class CafeManagementSystem {
         // TODO code application logic here
         new Login().setVisible(true);
     }
-    
+
 }
