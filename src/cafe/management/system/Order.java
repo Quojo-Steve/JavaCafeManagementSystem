@@ -65,6 +65,7 @@ public final class Order extends JFrame {
             // Fetch and display items using a loop
             int x = 50;
             int y = 60;
+            //rendering on screen
             while (rs.next()) {
                 JPanel itemPanel = new JPanel();
                 itemPanel.setBounds(x, y, 200, 250);
@@ -141,7 +142,6 @@ public final class Order extends JFrame {
                 }
             });
             backgroundLabel.add(clear);
-
             JButton placeorder = new JButton("Place Order");
             placeorder.setBounds(1100, 630, 150, 35);
             placeorder.setBackground(Color.CYAN);
@@ -157,52 +157,37 @@ public final class Order extends JFrame {
                     int a = JOptionPane.showConfirmDialog(null, "Do you really want to place this order ?", "Select", JOptionPane.YES_NO_OPTION);
                     if (a == 0) {
                         try {
-                            // Insert order details into the database
                             String insertOrderQuery = "INSERT INTO `order` ( order_id, user_id, product_name, product_price) VALUES ( ?, ?, ?, ?)";
                             PreparedStatement insertOrderStmt = con.prepareStatement(insertOrderQuery);
-
                             for (String selectedItem : selectedItems) {
                                 int itemPrice = getItemPrice(selectedItem);
-
-//                                insertOrderStmt.setInt(1, id);
                                 insertOrderStmt.setInt(1, orderId);
                                 insertOrderStmt.setInt(2, userId);
                                 insertOrderStmt.setString(3, selectedItem);
                                 insertOrderStmt.setInt(4, itemPrice);
-
                                 insertOrderStmt.executeUpdate();
                             }
-
                             JOptionPane.showMessageDialog(Order.this, "Order placed successfully!");
-
-                            // Clear selectedItems and update wishlist display
                             selectedItems.clear();
                             updateWishlist();
+                            Order.this.setVisible(false);
                             new Thankyou().setVisible(true);
-                            
                         } catch (Exception ex) {
                             ex.printStackTrace();
                             JOptionPane.showMessageDialog(Order.this, "Error placing the order.");
                         }
                     }
-
                 }
             });
             backgroundLabel.add(placeorder);
-
             JPanel buttons = new JPanel();
             buttons.setBounds(900, 610, 380, 90);
             backgroundLabel.add(buttons);
-
-            // Make the frame and its components visible
             setVisible(true);
-
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error1: " + e.getMessage());
         }
     }
-
-    // Method to update the wishlist display
     private void updateWishlist() {
         JPanel wishlistPanel = new JPanel();
         wishlistPanel.setLayout(new BoxLayout(wishlistPanel, BoxLayout.Y_AXIS));
@@ -223,45 +208,37 @@ public final class Order extends JFrame {
             wishlistPanel.add(itemLabel);
         }
 
-// Display the total price
         JLabel totalLabel = new JLabel("Total Price: Ghc " + total);
         totalLabel.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 20));
         wishlistPanel.add(totalLabel);
 
         JScrollPane wishlistScrollPane = new JScrollPane(wishlistPanel);
         wishlistScrollPane.setPreferredSize(new Dimension(380, 550));
-//        wishlistScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
-        wishlistScrollPane.setBounds(900, 60, 380, 550); // Set the bounds as required
+        wishlistScrollPane.setBounds(900, 60, 380, 550); 
         getContentPane().add(wishlistScrollPane);
 
         wishlistPanel.revalidate();
         wishlistPanel.repaint();
     }
-
-// Method to get the price of a selected item
     private int getItemPrice(String itemName) {
         try {
             String query = "SELECT price FROM products WHERE name = ?";
             PreparedStatement pst = con.prepareStatement(query);
             pst.setString(1, itemName);
             ResultSet rs = pst.executeQuery();
-
             if (rs.next()) {
                 return rs.getInt("price");
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return 0; // Default price if not found
+        return 0; 
     }
-
-    // Method to add items to the selectedItems list with a limit of 10
     private void addItemToSelectedList(String item) {
         selectedItems.add(item);
-        updateWishlist(); // Update the wishlist display
+        updateWishlist(); 
     }
-
     private double calculateTotalPrice() {
         double totalPrice = 0.0;
         for (String selectedItem : selectedItems) {
@@ -269,14 +246,12 @@ public final class Order extends JFrame {
         }
         return totalPrice;
     }
-
     private int getCurrentUserId(String username1) {
         try {
             String query = "SELECT id FROM user WHERE email = ?";
             PreparedStatement pst = con.prepareStatement(query);
             pst.setString(1, username1);
             ResultSet rs = pst.executeQuery();
-
             if (rs.next()) {
                 return rs.getInt("id");
             }
