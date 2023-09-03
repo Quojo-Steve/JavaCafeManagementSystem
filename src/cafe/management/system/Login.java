@@ -103,9 +103,15 @@ public final class Login extends JFrame {
                     ResultSet rs = pstmt.executeQuery();
 
                     if (rs.next()) {
-                        JOptionPane.showMessageDialog(Login.this, "Login Successful");
-                        new Order(name).setVisible(true);
-                        Login.this.setVisible(false);
+                        if (name.equals("admin") && password.equals("admin")) {
+                            JOptionPane.showMessageDialog(Login.this, "Login Successful");
+                            Login.this.setVisible(false);
+                            new Products().setVisible(true);
+                        } else {
+                            JOptionPane.showMessageDialog(Login.this, "Login Successful");
+                            new Order(name).setVisible(true);
+                            Login.this.setVisible(false);
+                        }
                     } else {
                         JOptionPane.showMessageDialog(Login.this, "Username or password is incorrect");
                         txtemail.setText("");

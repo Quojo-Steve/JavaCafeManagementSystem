@@ -55,6 +55,7 @@ public final class Order extends JFrame {
             // Other components and content setup
             JLabel head = new JLabel();
             head.setText("Welcome to Susie's Cafe");
+            head.setForeground(Color.WHITE);
             head.setBounds(500, 20, 300, 40);
             head.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 25));
             backgroundLabel.add(head); // Add components to the background label
@@ -188,6 +189,7 @@ public final class Order extends JFrame {
             JOptionPane.showMessageDialog(null, "Error1: " + e.getMessage());
         }
     }
+
     private void updateWishlist() {
         JPanel wishlistPanel = new JPanel();
         wishlistPanel.setLayout(new BoxLayout(wishlistPanel, BoxLayout.Y_AXIS));
@@ -215,12 +217,13 @@ public final class Order extends JFrame {
         JScrollPane wishlistScrollPane = new JScrollPane(wishlistPanel);
         wishlistScrollPane.setPreferredSize(new Dimension(380, 550));
 
-        wishlistScrollPane.setBounds(900, 60, 380, 550); 
+        wishlistScrollPane.setBounds(900, 60, 380, 550);
         getContentPane().add(wishlistScrollPane);
 
         wishlistPanel.revalidate();
         wishlistPanel.repaint();
     }
+
     private int getItemPrice(String itemName) {
         try {
             String query = "SELECT price FROM products WHERE name = ?";
@@ -233,12 +236,14 @@ public final class Order extends JFrame {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return 0; 
+        return 0;
     }
+
     private void addItemToSelectedList(String item) {
         selectedItems.add(item);
-        updateWishlist(); 
+        updateWishlist();
     }
+
     private double calculateTotalPrice() {
         double totalPrice = 0.0;
         for (String selectedItem : selectedItems) {
@@ -246,6 +251,7 @@ public final class Order extends JFrame {
         }
         return totalPrice;
     }
+
     private int getCurrentUserId(String username1) {
         try {
             String query = "SELECT id FROM user WHERE email = ?";
